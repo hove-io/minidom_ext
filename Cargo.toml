@@ -1,0 +1,17 @@
+[package]
+name = "minidom_ext"
+version = "1.0.0"
+authors = ["Kisio Digital <team.coretools@kisio.com>"]
+license = "MIT"
+description = "Extension traits for minidom::Element"
+repository = "https://github.com/CanalTP/minidom_ext"
+edition = "2018"
+keywords = ["minidom", "extension"]
+
+[dependencies]
+anyhow = "1"
+minidom = "0.11"
+thiserror = "1"
+
+[dev-dependencies]
+pretty_assertions = "0.6"
