@@ -11,13 +11,13 @@ pub trait OnlyChildElementExt {
     /// an input and returning a boolean.
     ///
     /// The function returns a [`Result`] with an error if there is none
-    /// [`NoChildrenWithFilter`] or more than one [`MultipleChildrenWithFilter`] selected elements by the
+    /// [`NoChildrenFound`] or more than one [`MultipleChildrenFound`] selected elements by the
     /// predicate above.
     ///
-    /// [`NoChildrenWithFilter`]: enum.Error.html#variant.NoChildrenWithFilter
-    /// [`MultipleChildrenWithFilter`]: enum.Error.html#variant.MultipleChildrenWithFilter
+    /// [`NoChildrenFound`]: enum.Error.html#variant.NoChildrenFound
+    /// [`MultipleChildrenFound`]: enum.Error.html#variant.MultipleChildrenFound
     /// [`Result`]: https://doc.rust-lang.org/std/result/enum.Result.html
-    fn try_only_child_with_filter<'a, P>(&'a self, filter: P) -> Result<&'a Self, Error>
+    fn try_find_only_child<'a, P>(&'a self, predicate: P) -> Result<&'a Self, Error>
     where
         P: Fn(&'a Self) -> bool;
 
@@ -30,11 +30,11 @@ pub trait OnlyChildElementExt {
     /// only one child corresponding to the predicate.
     ///
     /// [`Option`]:  https://doc.rust-lang.org/std/option/enum.Option.html
-    fn only_child_with_filter<'a, P>(&'a self, filter: P) -> Option<&'a Self>
+    fn find_only_child<'a, P>(&'a self, predicate: P) -> Option<&'a Self>
     where
         P: Fn(&'a Self) -> bool,
     {
-        self.try_only_child_with_filter(filter).ok()
+        self.try_find_only_child(predicate).ok()
     }
 
     /// Try to get an unique child from its name and return a [`Result`].
@@ -76,7 +76,7 @@ impl OnlyChildElementExt for Element {
     ///     </root>"#;
     /// let root: Element = xml.parse().unwrap();
     /// let child = root
-    ///     .try_only_child_with_filter(|e| {
+    ///     .try_find_only_child(|e| {
     ///         e.name() == "child" && e.attr("type").map(|id| id == "ugly").unwrap_or(false)
     ///     })
     ///     .unwrap();
@@ -85,22 +85,22 @@ impl OnlyChildElementExt for Element {
     ///
     /// [`OnlyChildElementExt`]: trait.OnlyChildElementExt.html
     /// [`Element`]: ../minidom/element/struct.Element.html
-    fn try_only_child_with_filter<'a, P>(&'a self, filter: P) -> Result<&'a Self, Error>
+    fn try_find_only_child<'a, P>(&'a self, predicate: P) -> Result<&'a Self, Error>
     where
         P: Fn(&'a Self) -> bool,
     {
-        let mut child_iterator = self.children().filter(|child| filter(*child));
+        let mut child_iterator = self.children().filter(|child| predicate(*child));
         if let Some(child) = child_iterator.next() {
             if child_iterator.next().is_none() {
                 Ok(child)
             } else {
-                Err(Error::MultipleChildrenWithFilter(
+                Err(Error::MultipleChildrenFound(
                     self.name().to_owned(),
                     2 + child_iterator.count(),
                 ))
             }
         } else {
-            Err(Error::NoChildrenWithFilter(self.name().to_owned()))
+            Err(Error::NoChildrenFound(self.name().to_owned()))
         }
     }
 
@@ -125,12 +125,12 @@ impl OnlyChildElementExt for Element {
     /// [`OnlyChildElementExt`]: trait.OnlyChildElementExt.html
     /// [`Element`]: ../minidom/element/struct.Element.html
     fn try_only_child<'a>(&'a self, child_name: &str) -> Result<&'a Self, Error> {
-        self.try_only_child_with_filter(|element| element.name() == child_name)
+        self.try_find_only_child(|element| element.name() == child_name)
             .map_err(|e| match e {
-                Error::MultipleChildrenWithFilter(element_name, count) => {
+                Error::MultipleChildrenFound(element_name, count) => {
                     Error::MultipleChildren(element_name, child_name.to_owned(), count)
                 }
-                Error::NoChildrenWithFilter(element_name) => {
+                Error::NoChildrenFound(element_name) => {
                     Error::NoChildren(element_name, child_name.to_owned())
                 }
                 e => e,
@@ -151,7 +151,7 @@ mod tests {
             </root>"#;
         let root: Element = xml.parse().unwrap();
         let child = root
-            .try_only_child_with_filter(|e| {
+            .try_find_only_child(|e| {
                 e.name() == "child" && e.attr("type").map(|id| id == "ugly").unwrap_or(false)
             })
             .unwrap();
@@ -163,10 +163,10 @@ mod tests {
         let xml: &'static str = r#"<root />"#;
         let root: Element = xml.parse().unwrap();
         let error = root
-            .try_only_child_with_filter(|e| e.name() == "child")
+            .try_find_only_child(|e| e.name() == "child")
             .unwrap_err();
         assert_eq!(
-            "No children matching filter in Element \'root\'",
+            "No children matching predicate found in Element \'root\'",
             format!("{}", error)
         );
     }
@@ -179,10 +179,10 @@ mod tests {
             </root>"#;
         let root: Element = xml.parse().unwrap();
         let error = root
-            .try_only_child_with_filter(|e| e.name() == "child")
+            .try_find_only_child(|e| e.name() == "child")
             .unwrap_err();
         assert_eq!(
-            "Multiple children matching filter in Element \'root\' (found 2 elements)",
+            "Multiple children matching predicate found in Element \'root\' (found 2 elements)",
             format!("{}", error)
         );
     }

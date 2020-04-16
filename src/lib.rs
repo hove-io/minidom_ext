@@ -9,12 +9,12 @@ use thiserror::Error;
 pub enum Error {
     #[error("Failed to find attribute '{1}' in element '{0}'")]
     AttributeNotFound(String, String),
-    #[error("No children matching filter in Element '{0}'")]
-    NoChildrenWithFilter(String),
+    #[error("No children matching predicate found in Element '{0}'")]
+    NoChildrenFound(String),
     #[error("No children with name '{1}' in Element '{0}'")]
     NoChildren(String, String),
-    #[error("Multiple children matching filter in Element '{0}' (found {1} elements)")]
-    MultipleChildrenWithFilter(String, usize),
+    #[error("Multiple children matching predicate found in Element '{0}' (found {1} elements)")]
+    MultipleChildrenFound(String, usize),
     #[error("Multiple children with name '{1}' in Element '{0}' (found {2} elements)")]
     MultipleChildren(String, String, usize),
     #[error("Failed to parse and convert the value '{value}' of attribute '{attribute_name}' in element '{element_name}'")]
