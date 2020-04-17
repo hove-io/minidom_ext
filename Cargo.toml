@@ -1,6 +1,6 @@
 [package]
 name = "minidom_ext"
-version = "1.0.0"
+version = "1.0.1"
 authors = ["Kisio Digital <team.coretools@kisio.com>"]
 license = "MIT"
 description = "Extension traits for minidom::Element"
