@@ -39,7 +39,7 @@ impl AttributeElementExt for Element {
     /// use minidom::Element;
     /// use minidom_ext::AttributeElementExt;
     ///
-    /// let xml: &'static str = r#"<root id="42" />"#;
+    /// let xml: &'static str = r#"<root xmlns="ns" id="42" />"#;
     /// let root: Element = xml.parse().unwrap();
     /// let id: u64 = root.try_attribute("id").unwrap();
     /// assert_eq!(42, id);
@@ -71,7 +71,7 @@ mod tests {
 
     #[test]
     fn no_attribute() {
-        let xml: &'static str = r#"<root />"#;
+        let xml: &'static str = r#"<root xmlns="ns" />"#;
         let root: Element = xml.parse().unwrap();
         let error = root.try_attribute::<String>("id").unwrap_err();
         assert_eq!(
@@ -82,7 +82,7 @@ mod tests {
 
     #[test]
     fn no_children() {
-        let xml: &'static str = r#"<root id="root:1" />"#;
+        let xml: &'static str = r#"<root xmlns="ns" id="root:1" />"#;
         let root: Element = xml.parse().unwrap();
         let error = root.try_attribute::<f64>("id").unwrap_err();
         assert_eq!("Failed to parse and convert the value \'root:1\' of attribute \'id\' in element \'root\'", format!("{}", error));

@@ -70,7 +70,7 @@ impl OnlyChildElementExt for Element {
     /// use minidom::Element;
     /// use minidom_ext::OnlyChildElementExt;
     ///
-    /// let xml: &'static str = r#"<root>
+    /// let xml: &'static str = r#"<root xmlns="ns">
     ///         <child type="ugly" />
     ///         <child />
     ///     </root>"#;
@@ -112,7 +112,7 @@ impl OnlyChildElementExt for Element {
     /// use minidom::Element;
     /// use minidom_ext::OnlyChildElementExt;
     ///
-    /// let xml: &'static str = r#"<root>
+    /// let xml: &'static str = r#"<root xmlns="ns">
     ///         <child />
     ///     </root>"#;
     /// let root: Element = xml.parse().unwrap();
@@ -145,7 +145,7 @@ mod tests {
 
     #[test]
     fn only_one_child() {
-        let xml: &'static str = r#"<root>
+        let xml: &'static str = r#"<root xmlns="ns">
                 <child type="ugly" />
                 <child />
             </root>"#;
@@ -160,7 +160,7 @@ mod tests {
 
     #[test]
     fn no_children() {
-        let xml: &'static str = r#"<root />"#;
+        let xml: &'static str = r#"<root xmlns="ns" />"#;
         let root: Element = xml.parse().unwrap();
         let error = root
             .try_find_only_child(|e| e.name() == "child")
@@ -173,7 +173,7 @@ mod tests {
 
     #[test]
     fn multiple_child() {
-        let xml: &'static str = r#"<root>
+        let xml: &'static str = r#"<root xmlns="ns">
                 <child />
                 <child />
             </root>"#;
