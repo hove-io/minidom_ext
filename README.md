@@ -1,8 +1,8 @@
 [![GitHub Action Status][github_actions_badge]][github_actions]
 [![Latest Version]][crates.io]
 
-[github_actions_badge]: https://img.shields.io/github/workflow/status/CanalTP/minidom_ext/Continuous%20Integration
-[github_actions]: https://github.com/CanalTP/minidom_ext/actions
+[github_actions_badge]: https://img.shields.io/github/workflow/status/hove-io/minidom_ext/Continuous%20Integration
+[github_actions]: https://github.com/hove-io/minidom_ext/actions
 [Latest Version]: https://img.shields.io/crates/v/minidom_ext.svg 
 [crates.io]: https://crates.io/crates/minidom_ext                 
 

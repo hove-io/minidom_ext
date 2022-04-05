@@ -1,10 +1,10 @@
 [package]
 name = "minidom_ext"
 version = "1.1.1"
-authors = ["Kisio Digital <team.coretools@kisio.com>"]
+authors = ["Hove <team.coretools@kisio.com>"]
 license = "MIT"
 description = "Extension traits for minidom::Element"
-repository = "https://github.com/CanalTP/minidom_ext"
+repository = "https://github.com/hove-io/minidom_ext"
 edition = "2018"
 keywords = ["minidom", "extension"]
 
