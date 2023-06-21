@@ -89,7 +89,7 @@ impl OnlyChildElementExt for Element {
     where
         P: Fn(&'a Self) -> bool,
     {
-        let mut child_iterator = self.children().filter(|child| predicate(*child));
+        let mut child_iterator = self.children().filter(|child| predicate(child));
         if let Some(child) = child_iterator.next() {
             if child_iterator.next().is_none() {
                 Ok(child)
